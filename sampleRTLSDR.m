@@ -4,7 +4,7 @@
 % File: 	sampleRTLSDR.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function sampleRTLSDR (fs,fstart,N,B,long,lat)
+function sampleRTLSDR (fs,fstart,N,B,lat,long)
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Vars
@@ -51,7 +51,7 @@ function sampleRTLSDR (fs,fstart,N,B,long,lat)
 	% Save configuration
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
-		dlmwrite(['samples_' sampFile '/conf.csv'], [fs,fstart,N,B]);
+		dlmwrite(['samples_' sampFile '/conf.csv'], [fs,fstart,N,B,lat,long]);
 		system('echo ''----------------------------------------------------------------------------------------------------------''');
 		system(['echo ''fc = ' num2str(fc/1e6) ' MHz N = ' num2str(N) ' B = ' num2str(B) ' df = ' num2str(df/1e3) ' KHz fstart = ' num2str(fstart/1e6) ' MHz fstop = ' num2str(fstop/1e6) ' MHz''']);
 		 system('echo ''----------------------------------------------------------------------------------------------------------''');
