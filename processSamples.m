@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Author:	Max
-% Date: 	17.02.2017
+% Date: 	23.02.2017
 % File: 	processSamples.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function processSamples (dir)
+function processSamples (dir, ploton)
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Vars
@@ -21,8 +21,19 @@ function processSamples (dir)
 		df = fs/N					% Frequency resolution
 		fstop = B * fc + fstart				% Stop freq
 		D = 2^10;					% Decimation factor
-		Hnormal = 15559.216				% Av. power in front of the tower		
-		
+				
+		switch(fm)					% Normalize on the highest value measured for the
+								% corresponding TV signal
+			case 474e6
+				Hnormal = 1.9071e+04
+			case 594e6
+				Hnormal = 1.8748e+04
+			case 626e6	
+				Hnormal = 1.6057e+04
+			otherwise 
+				Hnormal = 0
+		end	
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Clue samples together
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -42,14 +53,39 @@ function processSamples (dir)
 
 		f = linspace(fstart, fstop, B*(N/2));		% Generate acc. freq. vector
 
+		wndwSize = 2048;
+		h = (ones(1,wndwSize)/wndwSize);
+		amplitudeS = filter(h, 1, amplitude); 
+
+		PTV = zeros(1,length(amplitudeS));		% Determine the signal power	
+		b = round((fm-5e6-fstart)/df);
+		t = round((fm+5e6-fstart)/df);
+		PTV(1,:) = mean(amplitudeS(b:t));
+		PTV(1)		
+
+		amplitudenorm = amplitudeS / Hnormal;		% Normalizing
+		amplitudedB = 20*log10(amplitudenorm);
+		PTVdB = 20*log10(PTV/Hnormal);
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Save processing results
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		 
+                resFile = 'results.csv'; 
+                dlmwrite(resFile, [fm,lat,lon,PTVdB(1),Hnormal], "-append");
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Show plots
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
+		if (ploton!=1)					% If and only if plots are activated
+			return;
+		end	
+		
 		subplot(411);				
 		plot(f,amplitude);
 
-		title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz @' num2str(lat,'3.6f') ',' num2str(lon,'3.6f')]);
+		title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
 		xlabel('f/Hz');
 		ylabel('|H|');
 
@@ -57,29 +93,18 @@ function processSamples (dir)
 		axis([fstart fstop 0 1.1*Hmax]);
 		grid on;
 	
-		subplot(412);						% Smooth out signal
-		wndwSize = 2048;
-		h = (ones(1,wndwSize)/wndwSize);
-		amplitude = filter(h, 1, amplitude); 
-		plot(f,amplitude);
+		subplot(412);						% This is the smooth signal
+		plot(f,amplitudeS);
 		title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz (LP Filter Smooting)  @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
-		Hmax = max(amplitude);
+		Hmax = max(amplitudeS);
 		axis([fstart fstop 0 1.1*Hmax]);
 		grid on;
 			
 		subplot(413);						% Introduce average power
-		PTV = zeros(1,length(amplitude));			
-		b = round((fm-5e6-fstart)/df);
-		t = round((fm+5e6-fstart)/df);
-		PTV(1,:) = mean(amplitude(b:t));		
-
-		amplitude = amplitude / Hnormal;			% Normalizing
-		amplitude = 20*log10(amplitude);
-		PTVdB = 20*log10(PTV/Hnormal);
-		Hmax = max(amplitude);
+		Hmax = max(amplitudedB);
 		Hmin = -35;
 		
-		plot(f,amplitude,f,PTVdB,'r','LineWidth',2);
+		plot(f,amplitudedB,f,PTVdB,'r','LineWidth',2);
 		text(fstart+B,PTVdB(1)-3, ['20*log(|Htv,avg|) = ' num2str(PTVdB(1)) ' |Htv,avg| = ' num2str(PTV(1))]);
 		axis([fstart fstop Hmin 1.1*Hmax])
 		
@@ -90,4 +115,5 @@ function processSamples (dir)
 		set(gca,'xtick',fstart:2e6:fstop);% grid
 		set(gca,'ytick',round(Hmin/10)*10:10:round((0.9*Hmax)/10)*10);
 		grid on;			
+
 endfunction;
