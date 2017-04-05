@@ -4,7 +4,7 @@
 % File: 	sampleRTLSDR.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function sampleRTLSDR (fs,fstart,N,B,lat,long,fm)
+function samplefile = sampleRTLSDR(fs,fstart,N,B,lat,long,fm)
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Vars
@@ -26,6 +26,8 @@ function sampleRTLSDR (fs,fstart,N,B,lat,long,fm)
 		sampFile = strftime ('%Y_%m_%d_%H_%M_%S', localtime (time ()));
 		if exist(['samples_' sampFile]', 'dir') ~= 7;
 		       	system(['mkdir ' 'samples_' sampFile] );
+			% Return value
+			samplefile = ['samples_' sampFile];
 		end
 
 		for i = 0:(B - 1)	
