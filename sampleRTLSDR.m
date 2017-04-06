@@ -32,7 +32,7 @@ function sampleRTLSDR (fs,fstart,N,B,lat,long,fm)
 			% Move further by ft
 			ft = i*fc + fstart;
 			% Command for sampling	
-			rtlsdr_cmd = ['rtl_sdr ' filename ' -s ' num2str(fs) ' -f ' num2str(ft) ' -g 40 -n ' num2str(N)];
+			rtlsdr_cmd = ['rtl_sdr ' filename ' -s ' num2str(fs) ' -f ' num2str(ft) ' -g 50 -n ' num2str(N)];
 			system(rtlsdr_cmd);
 
 			% Convert sampled data
