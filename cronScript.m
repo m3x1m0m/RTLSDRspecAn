@@ -3,5 +3,5 @@
 % Date:         05.04.2017
 % File:         cronScript.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+cd /home/maximilian/RTLSDRspecAn
 sampleRTLSDR(1.8e6,615e6,2048,25,52.79101,17.64828,626e6);
