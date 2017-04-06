@@ -4,7 +4,7 @@
 % File: 	sampleRTLSDR.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function sampleRTLSDR (fs,fstart,N,B,lat,long,fm)
+function samplefile = sampleRTLSDR(fs,fstart,N,B,lat,long,fm)
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Vars
@@ -14,6 +14,7 @@ function sampleRTLSDR (fs,fstart,N,B,lat,long,fm)
 		df = fs/N;				% Frequency resolution
 		fstop = B * fc + fstart;		% Stop freq
 		filename = '/tmp/capture.bin';		% Filename for temporary storage
+		outFile = '/home/maximilian/samples';
 		system('echo ''----------------------------------------------------------------------------------------------------------''');
 		system(['echo ''fc = ' num2str(fc/1e6) ' MHz N = ' num2str(N) ' B = ' num2str(B) ' df = ' num2str(df/1e3) ' KHz fstart = ' num2str(fstart/1e6) ' MHz fstop = ' num2str(fstop/1e6) ' MHz''']);
 		 system('echo ''----------------------------------------------------------------------------------------------------------''');
@@ -24,8 +25,11 @@ function sampleRTLSDR (fs,fstart,N,B,lat,long,fm)
 	
 		% Create directory
 		sampFile = strftime ('%Y_%m_%d_%H_%M_%S', localtime (time ()));
-		if exist(['samples_' sampFile]', 'dir') ~= 7;
-		       	system(['mkdir ' 'samples_' sampFile] );
+		thefile = [outFile '/samples_' sampFile];			
+		if exist(thefile, 'dir') ~= 7;
+		       	system(['mkdir ' thefile] );
+			% Return value
+			samplefile = thefile;
 		end
 
 		for i = 0:(B - 1)	
@@ -44,14 +48,14 @@ function sampleRTLSDR (fs,fstart,N,B,lat,long,fm)
 		
 			% Wite data into a file
 			% Just in case you want to do something else with it later 
-			dlmwrite(['samples_' sampFile '/samp_' num2str(i) '.csv'], Raw); 	
+			dlmwrite([thefile '/samp_' num2str(i) '.csv'], Raw); 	
 		end
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Save configuration
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
-		dlmwrite(['samples_' sampFile '/conf.csv'], [fs,fstart,N,B,lat,long,fm]);
+		dlmwrite([thefile '/conf.csv'], [fs,fstart,N,B,lat,long,fm]);
 		system('echo ''----------------------------------------------------------------------------------------------------------''');
 		system(['echo ''fc = ' num2str(fc/1e6) ' MHz N = ' num2str(N) ' B = ' num2str(B) ' df = ' num2str(df/1e3) ' KHz fstart = ' num2str(fstart/1e6) ' MHz fstop = ' num2str(fstop/1e6) ' MHz''']);
 		 system('echo ''----------------------------------------------------------------------------------------------------------''');
