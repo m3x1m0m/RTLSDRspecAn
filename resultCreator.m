@@ -3,12 +3,12 @@
 % Date:         23.02.2017
 % File:         resultCreator.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+		
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Vars
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-		fileSyllable = 'samples_';
+		
+		fileSyllable = '003samples/samples_';
 		fileRes = 'results.csv';
 		R = 6371e3; 							% Earth radius
 		rad = pi/180;
@@ -21,11 +21,11 @@
 		A = strread(list, '%s', 'delimiter', sprintf('\n'));
 		for i = 1:(numel(A))
 			B = cell2mat(A(i));
-			%processSamples(B,0);					% Deactivate plotting	
+			processSamples(B,0);					% Deactivate plotting	
 		end
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % Use haversine functio to calculate distances
+        % Use haversine function to calculate distances
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		D = dlmread(fileRes);						% matrix to draw
 		%x = D(:,3);
