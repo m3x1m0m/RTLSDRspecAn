@@ -25,11 +25,14 @@ function processSamples (dir, ploton)
 		switch(fm)					% Normalize on the highest value measured for the
 								% corresponding TV signal
 			case 474e6
-				Hnormal = 1.9071e+04
+				%Hnormal = 1.9071e+04
+				Hnormal = 3621.373
 			case 594e6
-				Hnormal = 1.8748e+04
+				%Hnormal = 1.8748e+04
+				Hnormal = 3459.997
 			case 626e6	
-				Hnormal = 1.6057e+04
+				%Hnormal = 1.6057e+04
+				Hnormal = 3405.801
 			otherwise 
 				Hnormal = 0
 		end	
@@ -82,37 +85,41 @@ function processSamples (dir, ploton)
 			return;
 		end	
 		
-		subplot(411);				
+		figure(411);					
 		plot(f,amplitude);
+		set(gca, "fontsize", 20);	
 
-		title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
+		%title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
 		xlabel('f/Hz');
 		ylabel('|H|');
 
 		Hmax = max(amplitude);
 		axis([fstart fstop 0 1.1*Hmax]);
 		grid on;
-	
-		subplot(412);						% This is the smooth signal
+		set(gca,'xtick',fstart:10e6:fstop);% grid
+			
+		figure(412);						% This is the smooth signal	
 		plot(f,amplitudeS);
-		title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz (LP Filter Smooting)  @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
+		set(gca, "fontsize", 18);	
+		%title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz (LP Filter Smooting)  @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
 		Hmax = max(amplitudeS);
 		axis([fstart fstop 0 1.1*Hmax]);
 		grid on;
 			
-		subplot(413);						% Introduce average power
+		figure(413);						% Introduce average power
 		Hmax = max(amplitudedB);
 		Hmin = -35;
 		
 		plot(f,amplitudedB,f,PTVdB,'r','LineWidth',2);
-		text(fstart+B,PTVdB(1)-3, ['20*log(|Htv,avg|) = ' num2str(PTVdB(1)) ' |Htv,avg| = ' num2str(PTV(1))]);
+		set(gca, "fontsize", 20);		
+		%text(fstart+B,PTVdB(1)-3, ['20*log(|Htv,avg|) = ' num2str(PTVdB(1)) ' |Htv,avg| = ' num2str(PTV(1))]);
 		axis([fstart fstop Hmin 1.1*Hmax])
 		
 		xlabel('f/Hz');
 		ylabel('|Htv,avg| in dB');
-		title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz (LP Filter Smooting)  @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
+		%title([ 'Spectrum Analysis from ' num2str(fstart/1e6) ' MHz to ' num2str(fstop/1e6) ' MHz (LP Filter Smooting)  @' num2str(lat,'%3.6f') ',' num2str(lon,'%3.6f')]);
 
-		set(gca,'xtick',fstart:2e6:fstop);% grid
+		set(gca,'xtick',fstart:10e6:fstop);% grid
 		set(gca,'ytick',round(Hmin/10)*10:10:round((0.9*Hmax)/10)*10);
 		grid on;			
 

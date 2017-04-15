@@ -21,7 +21,7 @@
 		A = strread(list, '%s', 'delimiter', sprintf('\n'));
 		for i = 1:(numel(A))
 			B = cell2mat(A(i));
-			%processSamples(B,0);					% Deactivate plotting	
+		%	processSamples(B,0);					% Deactivate plotting	
 		end
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -95,9 +95,12 @@
 		F594 = -20*log10((4*pi*d*594e6)/3e8);
 		F626 = -20*log10((4*pi*d*626e6)/3e8);
 		fig = plot(f474(:,4),f474(:,3),'r.',f594(:,4),f594(:,3),'g.',f626(:,4),f626(:,3),'b.');
+	%	title('Samples Evaluated with Haversine Function');
+		set(gca, 'fontsize', 20);
 		set(fig,'MarkerSize',20);
 		set(fig,'LineWidth',20);
 		hold on;
+		legend('474 MHz', '594 MHz', '626 MHz');
 		xlabel('d/m');
 		ylabel('A/dB');
 		grid on;

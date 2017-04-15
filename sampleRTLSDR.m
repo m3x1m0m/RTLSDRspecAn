@@ -14,7 +14,7 @@ function samplefile = sampleRTLSDR(fs,fstart,N,B,lat,long,fm)
 		df = fs/N;				% Frequency resolution
 		fstop = B * fc + fstart;		% Stop freq
 		filename = '/tmp/capture.bin';		% Filename for temporary storage
-		outFile = '/home/maximilian/samples';
+		outFile = '.';
 		system('echo ''----------------------------------------------------------------------------------------------------------''');
 		system(['echo ''fc = ' num2str(fc/1e6) ' MHz N = ' num2str(N) ' B = ' num2str(B) ' df = ' num2str(df/1e3) ' KHz fstart = ' num2str(fstart/1e6) ' MHz fstop = ' num2str(fstop/1e6) ' MHz''']);
 		 system('echo ''----------------------------------------------------------------------------------------------------------''');
