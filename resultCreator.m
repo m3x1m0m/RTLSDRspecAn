@@ -21,11 +21,7 @@
 		A = strread(list, '%s', 'delimiter', sprintf('\n'));
 		for i = 1:(numel(A))
 			B = cell2mat(A(i));
-<<<<<<< HEAD
-		%	processSamples(B,0);					% Deactivate plotting	
-=======
 			processSamples(B,0);					% Deactivate plotting	
->>>>>>> 357a2e1052fdbd235067661eb309608fa12b77ea
 		end
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
